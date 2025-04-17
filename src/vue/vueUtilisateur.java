@@ -18,7 +18,7 @@ public class vueUtilisateur extends JFrame {
         setLayout(new BorderLayout());
 
 
-        try {
+        try{
             ImageIcon icon = new ImageIcon("src/images/logo.png");
             Image img = icon.getImage().getScaledInstance(250, 100, Image.SCALE_SMOOTH);
             JLabel logo = new JLabel(new ImageIcon(img), JLabel.CENTER);
