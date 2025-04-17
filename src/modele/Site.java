@@ -34,7 +34,7 @@ public class Site
         this.piscine = piscine;
         this.transportProche = transportProche;
     }
-
+    
     public int getIdSite()
     {
         return idSite;
