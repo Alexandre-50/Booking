@@ -49,7 +49,8 @@ public class vueUtilisateur extends JFrame {
         setVisible(true);
     }
 
-    private void afficherFormulaireInscription() {
+    private void afficherFormulaireInscription()
+    {
         JTextField nom = new JTextField(15);
         JTextField prenom = new JTextField(15);
         JTextField email = new JTextField(15);
@@ -72,7 +73,8 @@ public class vueUtilisateur extends JFrame {
         }
     }
 
-    private void afficherFormulaireConnexion() {
+    private void afficherFormulaireConnexion()
+    {
         JTextField email = new JTextField(15);
         JPasswordField motDePasse = new JPasswordField(15);
 
