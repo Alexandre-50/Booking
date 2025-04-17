@@ -83,7 +83,6 @@ public class vueUtilisateur extends JFrame {
         panel.add(email);
         panel.add(new JLabel("Mot de passe :"));
         panel.add(motDePasse);
-
         int result = JOptionPane.showConfirmDialog(this, panel, "Connexion", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             Utilisateur utilisateur = controler.seConnecter(email.getText(), new String(motDePasse.getPassword()));
