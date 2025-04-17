@@ -17,7 +17,7 @@ public class vueUtilisateur extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Logo en haut
+
         try {
             ImageIcon icon = new ImageIcon("src/images/logo.png");
             Image img = icon.getImage().getScaledInstance(250, 100, Image.SCALE_SMOOTH);
