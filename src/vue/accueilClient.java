@@ -1,124 +1,150 @@
 package vue;
-
-import dao.DaoFactory;
-import dao.siteDAO;
-import dao.siteDAOImpl;
-import modele.Site;
-
+import controleur.UtilisateurControleur;
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
-public class accueilClient extends JFrame {
+public class accueilClient extends JFrame
+{
 
-    public accueilClient() {
-        // Titre de la fenêtre
-        setTitle("Accueil - Hébergements disponibles");
+    // Champs du formulaire de recherche
+    private JTextField champVille;
+    private JComboBox<String> typeHebergement;
+    private JSpinner nbAdultes;
+    private JSpinner nbEnfants;
+    private JSpinner nbChambres;
+    private UtilisateurControleur controleur;
 
-        // Taille de la fenêtre
-        setSize(1000, 700);
+    // Constructeur principal
+    public accueilClient(UtilisateurControleur controleur) {
+        this.controleur = controleur;
+        afficheAccueil();
+    }
 
-        // Fermer l'application quand on ferme la fenêtre
+    // Méthode pour configurer toute l'interface graphique
+    private void afficheAccueil() {
+        setTitle("Booking - Recherche d'hébergement");
+        setSize(900, 450);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        // Centrer la fenêtre à l'écran
         setLocationRelativeTo(null);
-
-        // Utiliser une disposition avec 5 zones : Nord, Sud, Est, Ouest, Centre
         setLayout(new BorderLayout());
 
-        // Connexion à la base de données
-        DaoFactory daoFactory = DaoFactory.getInstance("booking", "root", "");
-        siteDAO siteDAO = new siteDAOImpl(daoFactory);
+        // === EN-TÊTE avec logo et bouton de connexion ===
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Logo Booking en haut de la page
         try {
-            //ImageIcon logo = new ImageIcon(getClass().getResource("/images/logo.png"));
-            //Image img = logo.getImage().getScaledInstance(300, 100, Image.SCALE_SMOOTH);
-            //JLabel logoLabel = new JLabel(new ImageIcon(img), JLabel.CENTER);
-            //logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-            //add(logoLabel, BorderLayout.NORTH);
+            ImageIcon logoIcon = new ImageIcon(getClass().getResource("/images/Logo.jpg"));
+            Image img = logoIcon.getImage().getScaledInstance(200, 80, Image.SCALE_SMOOTH);
+            JLabel logoLabel = new JLabel(new ImageIcon(img));
+
+            JPanel logoPanel = new JPanel(new GridBagLayout());
+            logoPanel.setOpaque(false);
+            logoPanel.setBackground(Color.WHITE);
+            logoPanel.add(logoLabel);
+            topPanel.add(logoPanel, BorderLayout.CENTER);
+
         } catch (Exception e) {
-            JLabel titre = new JLabel("Bienvenue sur Booking", JLabel.CENTER);
-            titre.setFont(new Font("Arial", Font.BOLD, 24));
-            titre.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-            add(titre, BorderLayout.NORTH);
+            JLabel labelTitre = new JLabel("Booking");
+            labelTitre.setFont(new Font("Arial", Font.BOLD, 26));
+            JPanel panelTitre = new JPanel(new GridBagLayout());
+            panelTitre.setOpaque(false);
+            panelTitre.setBackground(Color.WHITE);
+            panelTitre.add(labelTitre);
+            topPanel.add(panelTitre, BorderLayout.CENTER);
         }
 
-        // Panneau qui va contenir tous les hébergements
-        JPanel contentPanel = new JPanel();
+        // Bouton Connexion placé dans un sous-panel pour l'abaisser légèrement
+        JPanel boutonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        boutonPanel.setOpaque(false);
+        JButton boutonConnexion = new JButton("Connexion / Inscription");
+        boutonConnexion.setBackground(Color.WHITE);
+        boutonConnexion.setForeground(new Color(0, 120, 215));
+        boutonConnexion.setFocusPainted(false);
+        boutonConnexion.setFont(new Font("Arial", Font.PLAIN, 11));
+        boutonConnexion.setOpaque(true);
+        boutonConnexion.setBorderPainted(false);
+        boutonConnexion.setPreferredSize(new Dimension(150, 25));
+        boutonConnexion.addActionListener(e -> new vueUtilisateur(controleur));
+        boutonPanel.add(boutonConnexion);
+        topPanel.add(boutonPanel, BorderLayout.EAST);
 
-        // Utiliser un affichage vertical des hébergements
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        add(topPanel, BorderLayout.NORTH);
 
-        // Ajouter une barre de défilement au panneau principal
-        JScrollPane scrollPane = new JScrollPane(contentPanel);
-        add(scrollPane, BorderLayout.CENTER);
+        // === FORMULAIRE DE RECHERCHE ===
+        JPanel formulaireRecherche = new JPanel(new GridBagLayout());
+        formulaireRecherche.setBackground(new Color(245, 245, 245));
+        GridBagConstraints grille = new GridBagConstraints();
+        grille.insets = new Insets(10, 10, 10, 10);
+        grille.fill = GridBagConstraints.HORIZONTAL;
 
-        // Récupérer la liste des sites depuis la base de données
-        List<Site> sites = siteDAO.getAllSites();
+        grille.gridx = 0;
+        grille.gridy = 0;
+        formulaireRecherche.add(new JLabel("Destination :"), grille);
+        grille.gridx = 1;
+        champVille = new JTextField(20);
+        formulaireRecherche.add(champVille, grille);
 
-        // Boucle avec index
-        for (int i = 0; i < sites.size(); i++) {
-            Site site = sites.get(i);
-            JPanel panelSite = new JPanel(new BorderLayout(10, 10));
-            panelSite.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-            panelSite.setMaximumSize(new Dimension(850, 160));
-            panelSite.setPreferredSize(new Dimension(850, 160));
-            panelSite.setMinimumSize(new Dimension(850, 160));
+        grille.gridx = 0;
+        grille.gridy = 1;
+        formulaireRecherche.add(new JLabel("Type d'hébergement :"), grille);
+        grille.gridx = 1;
+        typeHebergement = new JComboBox<>(new String[]{"Tous", "Hôtel", "Villa", "Chalet", "Appartement", "Colocation", "Maison"});
+        formulaireRecherche.add(typeHebergement, grille);
 
-            // Image du site
-            JLabel imageLabel;
-            try {
-                String imagePath = "/images/" + site.getPhoto();
-                java.net.URL imgURL = getClass().getResource(imagePath);
-                if (imgURL != null) {
-                    ImageIcon icon = new ImageIcon(imgURL);
-                    Image img = icon.getImage().getScaledInstance(150, 120, Image.SCALE_SMOOTH);
-                    imageLabel = new JLabel(new ImageIcon(img));
-                    imageLabel.setPreferredSize(new Dimension(150, 120));
-                    imageLabel.setMinimumSize(new Dimension(150, 120));
-                    imageLabel.setMaximumSize(new Dimension(150, 120));
-                } else {
-                    imageLabel = new JLabel("[Image non disponible]");
-                }
-            } catch (Exception e) {
-                imageLabel = new JLabel("[Erreur de chargement image]");
-            }
+        grille.gridx = 0;
+        grille.gridy = 2;
+        formulaireRecherche.add(new JLabel("Adultes :"), grille);
+        grille.gridx = 1;
+        nbAdultes = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+        formulaireRecherche.add(nbAdultes, grille);
 
-            // Texte avec les informations du site
-            JTextArea info = new JTextArea();
-            info.setText(site.getNom() +
-                    "\nVille : " + site.getVille() +
-                    "\nPrix : " + site.getPrixParNuit() + " €/nuit" +
-                    "\n" + site.getDescription());
-            info.setEditable(false);
-            info.setBackground(null);
-            info.setBorder(null);
+        grille.gridx = 0;
+        grille.gridy = 3;
+        formulaireRecherche.add(new JLabel("Enfants :"), grille);
+        grille.gridx = 1;
+        nbEnfants = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
+        formulaireRecherche.add(nbEnfants, grille);
 
-            // Bouton pour voir les détails du site
-            JButton boutonDetails = new JButton("Détails");
-            boutonDetails.setFont(new Font("Arial", Font.PLAIN, 10));
-            boutonDetails.setPreferredSize(new Dimension(70, 25));
-            boutonDetails.setMaximumSize(new Dimension(70, 25));
-            boutonDetails.setMinimumSize(new Dimension(70, 25));
-            boutonDetails.addActionListener(e -> {
-                JOptionPane.showMessageDialog(this,
-                        "Détails de l'hébergement :\n" +
-                                site.getNom() + " à " + site.getVille());
-            });
+        grille.gridx = 0;
+        grille.gridy = 4;
+        formulaireRecherche.add(new JLabel("Chambres :"), grille);
+        grille.gridx = 1;
+        nbChambres = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+        formulaireRecherche.add(nbChambres, grille);
 
-            // Ajouter les éléments au panneau de chaque site
-            panelSite.add(imageLabel, BorderLayout.WEST);
-            panelSite.add(info, BorderLayout.CENTER);
-            panelSite.add(boutonDetails, BorderLayout.EAST);
+        grille.gridx = 0;
+        grille.gridy = 5;
+        grille.gridwidth = 2;
+        JButton boutonRechercher = new JButton("Rechercher");
+        boutonRechercher.setBackground(new Color(0, 120, 215));
+        boutonRechercher.setForeground(Color.WHITE);
+        boutonRechercher.setFocusPainted(false);
+        boutonRechercher.setFont(new Font("Arial", Font.BOLD, 14));
+        boutonRechercher.setOpaque(true);
+        boutonRechercher.setBorderPainted(false);
+        formulaireRecherche.add(boutonRechercher, grille);
 
-            // Ajouter le panneau du site à la liste générale
-            contentPanel.add(panelSite);
-            contentPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Espace entre les sites
-        }
+        add(formulaireRecherche, BorderLayout.CENTER);
 
-        // Rendre la fenêtre visible
+        boutonRechercher.addActionListener(e -> lancerRecherche());
+
         setVisible(true);
+    }
+
+    private void lancerRecherche()
+    {
+        String ville = champVille.getText().trim();
+        String type = (String) typeHebergement.getSelectedItem();
+        int adultes = (Integer) nbAdultes.getValue();
+        int enfants = (Integer) nbEnfants.getValue();
+        int chambres = (Integer) nbChambres.getValue();
+
+        JOptionPane.showMessageDialog(this, "Recherche de :\n\nVille : " + ville + "\nType d'hébergement : " + type + "\nAdultes : " + adultes + "\nEnfants : " + enfants + "\nChambres : " + chambres, "Critères de recherche", JOptionPane.INFORMATION_MESSAGE);
+
+        // TODO : Rediriger vers une nouvelle fenêtre ResultatsRecherche
     }
 }
