@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class livres {
+public class BarreDerecherche {
     public static void main(String[] args) {
         // Création de la fenêtre principale
         JFrame frame = new JFrame("Barre de recherche");
