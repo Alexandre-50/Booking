@@ -1,9 +1,11 @@
+package vue;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class BarreDeRechercheAmelioree {
+public class BarreDeRecherche {
     public static void main(String[] args) {
         // Création de la fenêtre principale
         JFrame frame = new JFrame("Recherche");
