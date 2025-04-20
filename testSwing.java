@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class BarreDeRecherche{
+public class BarreDeRecherche  {   
     public static void main(String[] args) {
         // Création de la fenêtre principale
         JFrame frame = new JFrame("Recherche");
