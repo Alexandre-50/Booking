@@ -18,14 +18,14 @@ public class vueUtilisateur extends JFrame {
         setLayout(new BorderLayout());
 
 
-        try{
+        /*try{
             ImageIcon icon = new ImageIcon("src/images/logo.png");
             Image img = icon.getImage().getScaledInstance(250, 100, Image.SCALE_SMOOTH);
             JLabel logo = new JLabel(new ImageIcon(img), JLabel.CENTER);
             add(logo, BorderLayout.NORTH);
         } catch (Exception e) {
             System.out.println("Image logo non trouvée !");
-        }
+        }*/
 
         JPanel panelBoutons = new JPanel();
         panelBoutons.setLayout(new BoxLayout(panelBoutons, BoxLayout.Y_AXIS));

@@ -4,8 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
+import modele.Site;
+import dao.DaoFactory;
+import dao.siteDAO;
+import dao.siteDAOImpl;
+import java.util.List;
 
 public class accueilClient extends JFrame
 {
@@ -127,7 +131,6 @@ public class accueilClient extends JFrame
         boutonRechercher.setOpaque(true);
         boutonRechercher.setBorderPainted(false);
         formulaireRecherche.add(boutonRechercher, grille);
-
         add(formulaireRecherche, BorderLayout.CENTER);
 
         boutonRechercher.addActionListener(e -> lancerRecherche());
@@ -143,8 +146,16 @@ public class accueilClient extends JFrame
         int enfants = (Integer) nbEnfants.getValue();
         int chambres = (Integer) nbChambres.getValue();
 
-        JOptionPane.showMessageDialog(this, "Recherche de :\n\nVille : " + ville + "\nType d'hébergement : " + type + "\nAdultes : " + adultes + "\nEnfants : " + enfants + "\nChambres : " + chambres, "Critères de recherche", JOptionPane.INFORMATION_MESSAGE);
+        DaoFactory daoFactory = DaoFactory.getInstance("booking", "root", "");
+        siteDAO dao = new siteDAOImpl(daoFactory);
 
-        // TODO : Rediriger vers une nouvelle fenêtre ResultatsRecherche
+        List<Site> resultats = dao.rechercherSites(ville, type, adultes, enfants);
+
+        if (resultats.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Aucun résultat trouvé.", "Résultats", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            new RechercheHebergement(resultats,adultes,enfants);
+        }
     }
 }

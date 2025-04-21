@@ -5,10 +5,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class siteDAOImpl implements siteDAO {
+public class siteDAOImpl implements siteDAO
+{
     private DaoFactory daoFactory;
 
-    public siteDAOImpl(DaoFactory daoFactory) {
+    public siteDAOImpl(DaoFactory daoFactory)
+    {
         this.daoFactory = daoFactory;
     }
 
@@ -50,6 +52,60 @@ public class siteDAOImpl implements siteDAO {
             e.printStackTrace();
         }
         return sites;
+    }
+
+    @Override
+    public List<Site> rechercherSites(String ville, String type, int nbAdultes, int nbEnfants)
+    {
+        List<Site> resultats = new ArrayList<>();
+        Connection connexion = null;
+        Statement statement = null;
+        ResultSet resultatsRequete = null;
+
+        try {
+            connexion = daoFactory.getConnection();
+            statement = connexion.createStatement();
+
+            StringBuilder requete = new StringBuilder();
+            requete.append("SELECT site.* FROM site ");
+            requete.append("INNER JOIN categories ON site.id_categorie = categories.id_categories ");
+            requete.append("WHERE 1=1 ");
+
+            if (ville != null && !ville.trim().isEmpty()) {
+                requete.append(" AND ville LIKE '%").append(ville.trim()).append("%' ");
+            }
+
+            if (type != null && !type.equalsIgnoreCase("Tous")) {
+                requete.append(" AND categories.nom LIKE '%").append(type.trim()).append("%' ");
+            }
+
+            System.out.println("Requête SQL générée : " + requete.toString());
+
+            resultatsRequete = statement.executeQuery(requete.toString());
+
+            while (resultatsRequete.next()) {
+                Site site = extraireSite(resultatsRequete);
+                resultats.add(site);
+            }
+
+            System.out.println("\nSites trouvés :");
+            for (int i = 0; i < resultats.size(); i++) {
+                System.out.println((i + 1) + ". " + resultats.get(i).getNom());
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la recherche des sites : " + e.getMessage());
+        } finally {
+            try {
+                if (resultatsRequete != null) resultatsRequete.close();
+                if (statement != null) statement.close();
+                if (connexion != null) connexion.close();
+            } catch (SQLException e) {
+                System.err.println("Erreur lors de la fermeture des ressources : " + e.getMessage());
+            }
+        }
+
+        return resultats;
     }
 
     private Site extraireSite(ResultSet rs) throws SQLException {

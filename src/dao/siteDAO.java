@@ -7,4 +7,5 @@ public interface siteDAO
 {
     List<Site> getAllSites();
     List<Site> getSitesParVille(String ville);
+    List<Site> rechercherSites(String ville, String type, int nbAdultes, int nbEnfants);
 }
