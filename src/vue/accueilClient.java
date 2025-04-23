@@ -1,20 +1,20 @@
 package vue;
 import controleur.UtilisateurControleur;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import modele.Site;
 import dao.DaoFactory;
+import dao.logementDAO;
+import dao.logementDAOImpl;
 import dao.siteDAO;
 import dao.siteDAOImpl;
+import modele.Logement;
+import modele.Site;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class accueilClient extends JFrame
 {
 
-    // Champs du formulaire de recherche
     private JTextField champVille;
     private JComboBox<String> typeHebergement;
     private JSpinner nbAdultes;
@@ -22,21 +22,19 @@ public class accueilClient extends JFrame
     private JSpinner nbChambres;
     private UtilisateurControleur controleur;
 
-    // Constructeur principal
     public accueilClient(UtilisateurControleur controleur) {
         this.controleur = controleur;
         afficheAccueil();
     }
 
-    // Méthode pour configurer toute l'interface graphique
-    private void afficheAccueil() {
-        setTitle("Booking - Recherche d'hébergement");
+    private void afficheAccueil()
+    {
+        setTitle("Booking Accueil");
         setSize(900, 450);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // === EN-TÊTE avec logo et bouton de connexion ===
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -61,7 +59,6 @@ public class accueilClient extends JFrame
             topPanel.add(panelTitre, BorderLayout.CENTER);
         }
 
-        // Bouton Connexion placé dans un sous-panel pour l'abaisser légèrement
         JPanel boutonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         boutonPanel.setOpaque(false);
         JButton boutonConnexion = new JButton("Connexion / Inscription");
@@ -78,7 +75,6 @@ public class accueilClient extends JFrame
 
         add(topPanel, BorderLayout.NORTH);
 
-        // === FORMULAIRE DE RECHERCHE ===
         JPanel formulaireRecherche = new JPanel(new GridBagLayout());
         formulaireRecherche.setBackground(new Color(245, 245, 245));
         GridBagConstraints grille = new GridBagConstraints();
@@ -123,6 +119,7 @@ public class accueilClient extends JFrame
         grille.gridx = 0;
         grille.gridy = 5;
         grille.gridwidth = 2;
+
         JButton boutonRechercher = new JButton("Rechercher");
         boutonRechercher.setBackground(new Color(0, 120, 215));
         boutonRechercher.setForeground(Color.WHITE);
@@ -144,18 +141,28 @@ public class accueilClient extends JFrame
         String type = (String) typeHebergement.getSelectedItem();
         int adultes = (Integer) nbAdultes.getValue();
         int enfants = (Integer) nbEnfants.getValue();
-        int chambres = (Integer) nbChambres.getValue();
 
         DaoFactory daoFactory = DaoFactory.getInstance("booking", "root", "");
-        siteDAO dao = new siteDAOImpl(daoFactory);
+        siteDAO siteDao = new siteDAOImpl(daoFactory);
+        logementDAO logementDao = new logementDAOImpl(daoFactory);
 
-        List<Site> resultats = dao.rechercherSites(ville, type, adultes, enfants);
+        List<Site> sites = siteDao.rechercherSites(ville, type, adultes, enfants);
+        List<Logement> logements = new ArrayList<>();
 
-        if (resultats.isEmpty())
+        for (int i = 0; i < sites.size(); i++)
         {
-            JOptionPane.showMessageDialog(this, "Aucun résultat trouvé.", "Résultats", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            new RechercheHebergement(resultats,adultes,enfants);
+            Site s = sites.get(i);
+            List<Logement> logementsDuSite = logementDao.getLogementsParSite(s.getIdSite());
+            logements.addAll(logementsDuSite);
+        }
+
+        if (logements.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Aucun logement trouvé.", "Résultats", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else
+        {
+            new RechercheHebergement(sites, logements, adultes, enfants);
         }
     }
 }

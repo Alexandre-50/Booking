@@ -34,4 +34,9 @@ public class DaoFactory {
     public UtilisateurDAO getUtilisateurDAO() {
         return new UtilisateurDAOImpl(this);
     }
+
+    public logementDAO getLogementDAO()
+    {
+        return new logementDAOImpl(this);
+    }
 }

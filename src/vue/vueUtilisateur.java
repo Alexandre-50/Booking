@@ -6,17 +6,18 @@ import modele.Utilisateur;
 import javax.swing.*;
 import java.awt.*;
 
-public class vueUtilisateur extends JFrame {
+public class vueUtilisateur extends JFrame
+{
     private UtilisateurControleur controler;
 
-    public vueUtilisateur(UtilisateurControleur controller) {
+    public vueUtilisateur(UtilisateurControleur controller)
+    {
         this.controler = controller;
         setTitle("Booking - Connexion / Inscription Client");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-
 
         /*try{
             ImageIcon icon = new ImageIcon("src/images/logo.png");
@@ -66,8 +67,9 @@ public class vueUtilisateur extends JFrame {
         panel.add(new JLabel("Mot de passe :"));
         panel.add(motDePasse);
 
-        int result = JOptionPane.showConfirmDialog(this, panel, "Inscription", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
+        int resultat = JOptionPane.showConfirmDialog(this, panel, "Inscription", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (resultat == JOptionPane.OK_OPTION)
+        {
             controler.inscrire(nom.getText(), prenom.getText(), email.getText(), new String(motDePasse.getPassword()));
             JOptionPane.showMessageDialog(this, "Inscription réussie !");
         }
@@ -84,11 +86,15 @@ public class vueUtilisateur extends JFrame {
         panel.add(new JLabel("Mot de passe :"));
         panel.add(motDePasse);
         int result = JOptionPane.showConfirmDialog(this, panel, "Connexion", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
+        if (result == JOptionPane.OK_OPTION)
+        {
             Utilisateur utilisateur = controler.seConnecter(email.getText(), new String(motDePasse.getPassword()));
-            if (utilisateur != null) {
+            if (utilisateur != null)
+            {
                 JOptionPane.showMessageDialog(this, "Bienvenue " + utilisateur.getPrenom() + " !");
-            } else {
+            }
+            else
+            {
                 JOptionPane.showMessageDialog(this, "Identifiants incorrects.", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
