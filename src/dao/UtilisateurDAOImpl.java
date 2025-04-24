@@ -18,8 +18,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO
     {
         String sql = "INSERT INTO utilisateurs (nom, prenom, email, motDePasse, ancienClient) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = daoFactory.getConnection();
-             PreparedStatement infoClients = conn.prepareStatement(sql)) {
+        try(Connection conn = daoFactory.getConnection();
+             PreparedStatement infoClients = conn.prepareStatement(sql))
+        {
 
             infoClients.setString(1, utilisateur.getNom());
             infoClients.setString(2, utilisateur.getPrenom());
