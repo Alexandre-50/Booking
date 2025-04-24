@@ -1,4 +1,5 @@
-package vue;
+
+/*package vue;
 
 import controleur.UtilisateurControleur;
 import modele.Utilisateur;
@@ -81,6 +82,102 @@ public class PageConnexion extends JFrame
             JOptionPane.showMessageDialog(this, "Bienvenue " + utilisateur.getPrenom() + " !");
             dispose();
             new accueilClient(controleur); // On affiche la page accueil
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Email ou mot de passe incorrect.", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}*/
+
+package vue;
+
+import controleur.UtilisateurControleur;
+import modele.Utilisateur;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class PageConnexion extends JFrame
+{
+    private JTextField emailField;
+    private JPasswordField passwordField;
+    private UtilisateurControleur controleur;
+    private accueilClient fenetreAccueil;
+
+    public PageConnexion(UtilisateurControleur controleur, accueilClient fenetreAccueil)
+    {
+        this.controleur = controleur;
+        this.fenetreAccueil = fenetreAccueil;
+
+        setTitle("Connexion utilisateur");
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        JPanel panelPrincipal = new JPanel();
+        panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+
+        JLabel titre = new JLabel("Se connecter à Booking");
+        titre.setFont(new Font("Arial", Font.BOLD, 18));
+        titre.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelPrincipal.add(titre);
+
+        panelPrincipal.add(Box.createVerticalStrut(20));
+
+        emailField = new JTextField();
+        passwordField = new JPasswordField();
+
+        panelPrincipal.add(creerChamp("Email", emailField));
+        panelPrincipal.add(Box.createVerticalStrut(10));
+        panelPrincipal.add(creerChamp("Mot de passe", passwordField));
+        panelPrincipal.add(Box.createVerticalStrut(20));
+
+        JButton boutonConnexion = new JButton("Connexion");
+        boutonConnexion.setBackground(new Color(0, 120, 215));
+        boutonConnexion.setForeground(Color.WHITE);
+        boutonConnexion.setFocusPainted(false);
+        boutonConnexion.setFont(new Font("Arial", Font.BOLD, 12));
+        boutonConnexion.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boutonConnexion.addActionListener(e -> seConnecter());
+
+        panelPrincipal.add(boutonConnexion);
+
+        add(panelPrincipal, BorderLayout.CENTER);
+        setVisible(true);
+    }
+
+    private JPanel creerChamp(String label, JComponent champ)
+    {
+        JPanel champPanel = new JPanel();
+        champPanel.setLayout(new BorderLayout());
+        champPanel.setBackground(Color.WHITE);
+        JLabel lbl = new JLabel(label);
+        champPanel.add(lbl, BorderLayout.NORTH);
+        champPanel.add(champ, BorderLayout.CENTER);
+        champ.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        return champPanel;
+    }
+
+    private void seConnecter()
+    {
+        String email = emailField.getText().trim();
+        String motDePasse = new String(passwordField.getPassword()).trim();
+
+        if (email.isEmpty() || motDePasse.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Utilisateur utilisateur = controleur.seConnecter(email, motDePasse);
+        if (utilisateur != null)
+        {
+            JOptionPane.showMessageDialog(this, "Connexion réussie. Bienvenue " + utilisateur.getPrenom() + " !");
+            fenetreAccueil.mettreAJourConnexion(utilisateur);
+            dispose();
         }
         else
         {
