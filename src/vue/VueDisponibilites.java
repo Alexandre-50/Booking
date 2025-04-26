@@ -183,18 +183,16 @@ public class VueDisponibilites extends JFrame
             for (int i = 0; i < total; i++)
             {
                 Disponibilites dispo = disponibilites.get(i);
-
                 if (!dispo.isEstDisponible())
                 {
                     continue;
                 }
-
                 boutons[indexBouton] = new JButton(dispo.getDateDisponible().toString());
                 boutons[indexBouton].setFont(new Font("Arial", Font.PLAIN, 11));
                 boutons[indexBouton].setBackground(new Color(0, 120, 215));
                 boutons[indexBouton].setForeground(Color.WHITE);
                 boutons[indexBouton].setFocusPainted(false);
-                boutons[indexBouton].setPreferredSize(new Dimension(90, 26));
+                boutons[indexBouton].setPreferredSize(new Dimension(100, 30));
 
                 final String date = dispo.getDateDisponible().toString();
                 boutons[indexBouton].addActionListener(e -> JOptionPane.showMessageDialog(this, "Créneau sélectionné : " + date, "Info", JOptionPane.INFORMATION_MESSAGE));
@@ -231,7 +229,7 @@ public class VueDisponibilites extends JFrame
     private void ajouterBoutonUtilisateur(JPanel boutonPanelOrigine)
     {
         boutonPanel.removeAll();
-        if (boutonPanelOrigine != null)
+        if(boutonPanelOrigine != null)
         {
             Component[] composants = boutonPanelOrigine.getComponents();
             for (int i=0;i<composants.length;i++)
