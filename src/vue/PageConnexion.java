@@ -93,7 +93,11 @@ public class PageConnexion extends JFrame
 package vue;
 
 import controleur.UtilisateurControleur;
+import modele.Administrateur;
 import modele.Utilisateur;
+import dao.AdminDAO;
+import dao.AdminDAOImpl;
+import dao.DaoFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -173,11 +177,26 @@ public class PageConnexion extends JFrame
         }
 
         Utilisateur utilisateur = controleur.seConnecter(email, motDePasse);
-        if (utilisateur != null)
+        Administrateur administrateur = controleur.seConnecterAdmin(email, motDePasse);
+
+        if (utilisateur != null || administrateur != null)
         {
-            JOptionPane.showMessageDialog(this, "Connexion réussie. Bienvenue " + utilisateur.getPrenom() + " !");
-            fenetreAccueil.mettreAJourConnexion(utilisateur);
+            AdminDAO adminDAO = new AdminDAOImpl(DaoFactory.getInstance("booking", "root", ""));
+            boolean isAdmin = adminDAO.estAdministrateur(administrateur.getEmail());
+
+            String prenom = utilisateur != null ? utilisateur.getPrenom() : administrateur.getPrenom();
+            JOptionPane.showMessageDialog(this, "Connexion réussie. Bienvenue " + prenom + " !");
             dispose();
+
+            if (isAdmin) {
+                new AccueilAdminPanel().setVisible(true);
+            } else {
+                if (fenetreAccueil != null) {
+                    fenetreAccueil.mettreAJourConnexion(utilisateur);
+                } else {
+                    new accueilClient(controleur).setVisible(true);
+                }
+            }
         }
         else
         {
@@ -185,7 +204,6 @@ public class PageConnexion extends JFrame
         }
     }
 }
-
 
 /*package vue;
 

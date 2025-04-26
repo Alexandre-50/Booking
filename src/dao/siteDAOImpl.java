@@ -153,6 +153,32 @@ public class siteDAOImpl implements siteDAO
     {
         this.daoFactory = daoFactory;
     }
+    @Override
+    public void addSite(Site site) {
+        String sql = "INSERT INTO site (nom, description, id_categorie, adresse, ville, nbEtoiles, prixParNuit, photo, petitDejeuner, parking, piscine, transportProche) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, site.getNom());
+            stmt.setString(2, site.getDescription());
+            stmt.setInt(3, site.getIdCategorie());
+            stmt.setString(4, site.getAdresse());
+            stmt.setString(5, site.getVille());
+            stmt.setInt(6, site.getNbEtoiles());
+            stmt.setDouble(7, site.getPrixParNuit());
+            stmt.setString(8, site.getPhoto());
+            stmt.setBoolean(9, site.isPetitDejeuner());
+            stmt.setBoolean(10, site.isParking());
+            stmt.setBoolean(11, site.isPiscine());
+            stmt.setBoolean(12, site.isTransportProche());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public List<Site> getAllSites() {
@@ -294,6 +320,57 @@ public class siteDAOImpl implements siteDAO
         site.setPiscine(rs.getBoolean("piscine"));
         site.setTransportProche(rs.getBoolean("transportProche"));
         return site;
+    }
+    @Override
+    public void updateSite(Site site) {
+        String query = """
+        UPDATE site SET 
+            nom = ?, 
+            description = ?, 
+            adresse = ?, 
+            ville = ?, 
+            nbEtoiles = ?, 
+            prixParNuit = ?, 
+            photo = ?, 
+            petitDejeuner = ?, 
+            parking = ?, 
+            piscine = ?, 
+            transportProche = ?
+        WHERE id_site = ?
+    """;
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, site.getNom());
+            stmt.setString(2, site.getDescription());
+            stmt.setString(3, site.getAdresse());
+            stmt.setString(4, site.getVille());
+            stmt.setInt(5, site.getNbEtoiles());
+            stmt.setDouble(6, site.getPrixParNuit());
+            stmt.setString(7, site.getPhoto());
+            stmt.setBoolean(8, site.isPetitDejeuner());
+            stmt.setBoolean(9, site.isParking());
+            stmt.setBoolean(10, site.isPiscine());
+            stmt.setBoolean(11, site.isTransportProche());
+            stmt.setInt(12, site.getIdSite());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void supprimerSiteParId(int id) {
+        String sql = "DELETE FROM site WHERE id_site = ?";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 
