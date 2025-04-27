@@ -13,6 +13,10 @@ public class Logement
     private boolean vueMer;
     private boolean minibar;
 
+    public Logement() {
+        // Constructeur vide nécessaire pour une initialisation par setters
+    }
+    
     public Logement(int id, int idSite, String description, double prixParNuit, boolean wifi, boolean climatisation, boolean fumeur, boolean petitDejeuner, boolean vueMer, boolean minibar)
     {
         this.idLogement = id;
