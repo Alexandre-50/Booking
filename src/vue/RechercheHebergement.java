@@ -476,21 +476,21 @@ public class RechercheHebergement extends JFrame
         panelFiltres = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelFiltres.setBorder(BorderFactory.createTitledBorder("Options"));
 
-        JCheckBox[] filtres = new JCheckBox[9];
-        filtres[0] = checkWifi = new JCheckBox("WiFi");
-        filtres[1] = checkClimatisation = new JCheckBox("Climatisation");
-        filtres[2] = checkFumeur = new JCheckBox("Fumeur");
-        filtres[3] = checkPetitDejeuner = new JCheckBox("Petit Déjeuner");
-        filtres[4] = checkVueMer = new JCheckBox("Vue Mer");
-        filtres[5] = checkMinibar = new JCheckBox("Minibar");
-        filtres[6] = checkParking = new JCheckBox("Parking");
-        filtres[7] = checkPiscine = new JCheckBox("Piscine");
-        filtres[8] = checkTransport = new JCheckBox("Transport Proche");
+        JCheckBox[] options = new JCheckBox[9];
+        options[0] = checkWifi = new JCheckBox("WiFi");
+        options[1] = checkClimatisation = new JCheckBox("Climatisation");
+        options[2] = checkFumeur = new JCheckBox("Fumeur");
+        options[3] = checkPetitDejeuner = new JCheckBox("Petit Déjeuner");
+        options[4] = checkVueMer = new JCheckBox("Vue Mer");
+        options[5] = checkMinibar = new JCheckBox("Minibar");
+        options[6] = checkParking = new JCheckBox("Parking");
+        options[7] = checkPiscine = new JCheckBox("Piscine");
+        options[8] = checkTransport = new JCheckBox("Transport Proche");
 
-        for (int i = 0; i < filtres.length; i++)
+        for (int i =0;i<options.length;i++)
         {
-            panelFiltres.add(filtres[i]);
-            filtres[i].addActionListener(e -> appliquerFiltres());
+            panelFiltres.add(options[i]);
+            options[i].addActionListener(e -> appliquerFiltres());
         }
 
         panelPrincipal.add(panelFiltres);
