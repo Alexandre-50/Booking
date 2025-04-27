@@ -9,4 +9,8 @@ public interface logementDAO {
     List<Logement> getTousLesLogements();
     List<Logement> getLogementsDisponibles(Date dateDebut, Date dateFin);
     Logement getLogementParId(int idLogement);
+    void addLogement(Logement logement);
+    void updateLogement(Logement logement);
+    void supprimerLogementParId(int id);
+
 }
