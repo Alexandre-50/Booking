@@ -74,6 +74,7 @@ public class logementDAOImpl implements logementDAO {
 package dao;
 
 import modele.Logement;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,22 @@ public class logementDAOImpl implements logementDAO {
 
     @Override
     public List<Logement> getTousLesLogements() {
-        return new ArrayList<>();
+
+        List<Logement> logements = new ArrayList<>();
+        String requete = "SELECT * FROM logements";
+
+        try (Connection conn = daoFactory.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(requete)) {
+
+            while (rs.next()) {
+                Logement logement = mapLogement(rs);
+                logements.add(logement);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return logements;
     }
 
     @Override
@@ -185,4 +201,76 @@ public class logementDAOImpl implements logementDAO {
                 rs.getBoolean("minibar")
         );
     }
+    @Override
+    public void addLogement(Logement logement) {
+        String sql = """
+        INSERT INTO logements (id_site, description, prixParNuit, wifi, climatisation, fumeur, petitDejeuner, vueMer, minibar)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """;
+
+        try (Connection connexion = daoFactory.getConnection();
+             PreparedStatement stmt = connexion.prepareStatement(sql)) {
+
+            stmt.setInt(1, logement.getIdSite());
+            stmt.setString(2, logement.getDescription());
+            stmt.setDouble(3, logement.getPrixParNuit());
+            stmt.setBoolean(4, logement.isWifi());
+            stmt.setBoolean(5, logement.isClimatisation());
+            stmt.setBoolean(6, logement.estFumeur());
+            stmt.setBoolean(7, logement.isPetitDejeuner());
+            stmt.setBoolean(8, logement.isVueMer());
+            stmt.setBoolean(9, logement.isMinibar());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void updateLogement(Logement logement) {
+        String sql = """
+        UPDATE logements SET 
+            description = ?, 
+            prixParNuit = ?, 
+            wifi = ?, 
+            climatisation = ?, 
+            fumeur = ?, 
+            petitDejeuner = ?, 
+            vueMer = ?, 
+            minibar = ?
+        WHERE id_logements = ?
+    """;
+
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, logement.getDescription());
+            stmt.setDouble(2, logement.getPrixParNuit());
+            stmt.setBoolean(3, logement.isWifi());
+            stmt.setBoolean(4, logement.isClimatisation());
+            stmt.setBoolean(5, logement.estFumeur());
+            stmt.setBoolean(6, logement.isPetitDejeuner());
+            stmt.setBoolean(7, logement.isVueMer());
+            stmt.setBoolean(8, logement.isMinibar());
+            stmt.setInt(9, logement.getIdLogement());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void supprimerLogementParId(int id) {
+        String sql = "DELETE FROM logements WHERE id_logements = ?";
+        try (Connection conn = daoFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
