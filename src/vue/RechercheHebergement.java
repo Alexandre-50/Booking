@@ -663,6 +663,7 @@ public class RechercheHebergement extends JFrame
         }
         afficherSitesEtLogements(Sites, filtresLogements);
     }
+    
 }
 
 
